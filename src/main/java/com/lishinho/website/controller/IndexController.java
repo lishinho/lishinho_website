@@ -1,6 +1,11 @@
 package com.lishinho.website.controller;
 
+import com.lishinho.website.aspect.LogAspect;
 import com.lishinho.website.model.User;
+import com.lishinho.website.service.WebService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +23,15 @@ import java.util.List;
 
 @Controller
 public class IndexController {
+    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+
+    @Autowired
+    WebService webService;
 
     @RequestMapping(path = {"/", "/index"})
     @ResponseBody
     public String index(HttpSession httpSession){
-        return "Hello worldXD" + httpSession.getAttribute("msg");
+        return "Hello worldXD " + httpSession.getAttribute("msg") + webService.getMsg(2);
     }
 
     @RequestMapping(path = {"/profile/{group}/{userId}"}, method = {RequestMethod.GET})
@@ -41,6 +50,7 @@ public class IndexController {
 
     @RequestMapping(path = {"/ftl"})
     public String template(Model model){
+        logger.info("visit ftl");
         model.addAttribute("value","Agoda");//String
         List<String> colors = Arrays.asList(new String[]{"Red","blue","Green","Yellow"});
         model.addAttribute("colors",colors);//list
